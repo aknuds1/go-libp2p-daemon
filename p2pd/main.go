@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/libp2p/go-libp2p"
+	"github.com/libp2p/go-libp2p-core/peer"
 
 	relay "github.com/libp2p/go-libp2p-circuit"
 	connmgr "github.com/libp2p/go-libp2p-connmgr"
@@ -97,6 +98,8 @@ func main() {
 		"available in the range [6060-7800], or on the user-provided port via -pprofPort")
 	pprofPort := flag.Uint("pprofPort", 0, "Binds the HTTP pprof handler to a specific port; "+
 		"has no effect unless the pprof option is enabled")
+	enableInlining := flag.Bool("enableInlining", true,
+		"enable public key inlining when computing peer ID")
 
 	flag.Parse()
 
@@ -250,6 +253,8 @@ func main() {
 			c.PProf.Port = *pprofPort
 		}
 	}
+
+	peer.AdvancedEnableInlining = *enableInlining
 
 	if err := c.Validate(); err != nil {
 		log.Fatal(err)
